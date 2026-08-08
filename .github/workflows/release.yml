@@ -49,9 +49,10 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          # Python 3.13 is supported by the application and currently gives
-          # the most predictable PyInstaller runtime across all targets.
-          python-version: "3.13"
+          # Python 3.12 is the conservative PyInstaller runtime for macOS;
+          # newer interpreter builds can omit the shared library from the
+          # frozen executable on GitHub-hosted macOS runners.
+          python-version: "3.12"
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
