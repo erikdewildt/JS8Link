@@ -1,0 +1,90 @@
+{
+  "language": "nl",
+  "version": 1,
+  "topics": [
+    {
+      "id": "global",
+      "title": "JS8Link gebruiken",
+      "summary": "JS8Link is een lokale stationconsole voor JS8Call-improved.",
+      "sections": [
+        {"heading": "Begin hier", "body": "Doorloop eerst de installatiewizard. JS8Call-improved moet actief zijn en de TCP-API moet ingeschakeld zijn. Daarna toont de bovenbalk de actuele radiostatus en openen het hoofdmenu Chat, Berichten en Bandmonitor."},
+        {"heading": "Een radioconsole", "body": "Blauw staat voor ontvangst en interactieve radiodata, oranje voor zenden en groen voor een gezonde verbinding. Frequenties, offsets, tijden en callsigns zijn bewust compact en scanbaar weergegeven."},
+        {"heading": "Veilig werken", "body": "JS8Link vervangt JS8Call niet. Radio-instellingen en zendacties gaan naar de verbonden JS8Call-API. Controleer band, mode en offset voordat je uitzendt."}
+      ],
+      "steps": ["Doorloop de wizard en test de JS8Call-verbinding.", "Kies een scherm uit het hoofdmenu.", "Open de contextuele Help-knop rechtsboven voor gerichte uitleg.", "Gebruik Instellingen voor taal, thema, tijdweergave en JS8Call-bediening."],
+      "troubleshooting": ["Controleer bij een verbindingsfout de host, poort en API-instelling van JS8Call.", "Controleer bij verouderde data de verbindingsindicator en de diagnosepagina.", "Een uitgeschakelde bediening kan betekenen dat JS8Call niet verbonden is of de API de actie niet aanbiedt."],
+      "references": [{"label": "Officiële JS8Call API-documentatie", "href": "https://js8call.com/JS8Call-improved/d7/d15/md_docs_2API.html"}, {"label": "Officiële JS8Call-gebruikershandleiding", "href": "https://js8call.com/JS8Call-improved/d6/d14/md_docs_2user__guide_2JS8Call__User__Guide.html"}, {"label": "Officiële JS8Call-API", "href": "https://js8call.com/JS8Call-improved/d7/d15/md_docs_2API.html"}],
+      "related": ["setup", "chat", "monitor", "settings"]
+    },
+    {
+      "id": "setup",
+      "title": "Installatiewizard",
+      "summary": "Verbind JS8Link met een actieve JS8Call-improved-installatie.",
+      "sections": [{"heading": "Verbinding", "body": "Vul de host en TCP-API-poort in. De standaardpoort is 2442. Test de verbinding voordat je verdergaat; de wizard controleert de API-versie."}, {"heading": "Applicatielogin", "body": "De optionele login beveiligt de JS8Link-webapplicatie. Dit verandert niets aan de JS8Call-authenticatie of de radiokoppeling."}, {"heading": "Afronden", "body": "Controleer het overzicht en sla op. De instellingen worden opgeslagen in de JS8Link-database."}],
+      "steps": ["Start de configuratie vanuit het welkomstscherm.", "Vul host en poort in en kies Verbinding testen.", "Schakel desgewenst de applicatielogin in.", "Sla de configuratie op en ga naar de console."],
+      "troubleshooting": ["Een geweigerde verbinding betekent meestal dat JS8Call niet draait, de API uitstaat of host/poort onjuist zijn.", "De wizard installeert JS8Call-improved niet; installeer en start JS8Call afzonderlijk."],
+      "references": [{"label": "Officiële JS8Call API-documentatie", "href": "https://js8call.com/JS8Call-improved/d7/d15/md_docs_2API.html"}],
+      "related": ["global", "settings"]
+    },
+    {
+      "id": "chat",
+      "title": "Chat",
+      "summary": "Wissel directe berichten uit met een gekozen callsign.",
+      "sections": [{"heading": "Gesprekkenlijst", "body": "Links staan directe gesprekken. Blauw betekent een ongelezen ontvangen bericht, oranje dat jij als laatste hebt verzonden en groen dat het gesprek gelezen is."}, {"heading": "Berichtcomposer", "body": "Kies aflevermethode, snelheid en eventueel Verzenden met Enter voordat je uitzendt. Bevestigde aflevering vereist JS8Link-ondersteuning bij het andere station; Best effort werkt met gewone JS8Call-berichten."}, {"heading": "Stationinformatie", "body": "De stationsinspecteur toont grid, QTH, signaaldata, protocolstatus en jouw lokale aantekeningen."}],
+      "steps": ["Kies een gesprek of kies Nieuwe chat.", "Controleer band, mode, offset en aflevermethode.", "Typ een bericht en verzend met de knop of Enter wanneer dat is ingeschakeld.", "Gebruik de inspecteur om stationinformatie te bekijken of te bewerken."],
+      "troubleshooting": ["Heartbeatverkeer wordt bewust niet als chat getoond; alleen directe berichten voor het gesprek verschijnen hier.", "Bevestigde aflevering blijft uitgeschakeld totdat JS8Link-ondersteuning bij het andere station is vastgesteld.", "Een bericht kan wachten totdat de geselecteerde callsign en TX-buffer transmission toestaan."],
+      "references": [{"label": "Officiële JS8Call API-documentatie", "href": "https://js8call.com/JS8Call-improved/d7/d15/md_docs_2API.html"}, {"label": "ARQ-protocol", "href": "/help/docs/js8link-arq-v1.md"}],
+      "related": ["global", "settings", "diagnostics"]
+    },
+    {
+      "id": "messages",
+      "title": "Berichten en inbox",
+      "summary": "Bekijk opgeslagen stationberichten en synchroniseer de JS8Call-inbox.",
+      "sections": [{"heading": "Huidige functie", "body": "Berichten is de plek voor opgeslagen directe stationberichten en afleverwachtrijen. Al het gedecodeerde bandverkeer staat in de Bandmonitor."}, {"heading": "Synchroniseren", "body": "Gebruik Inbox synchroniseren om inboxdata uit JS8Call op te vragen en in JS8Link op te slaan. Dit verstuurt geen gebruikersbericht."}],
+      "steps": ["Open Berichten vanuit het hoofdmenu.", "Kies Inbox synchroniseren om opgeslagen inboxdata te verversen.", "Gebruik de Bandmonitor voor verkeer, heartbeats en activity-frames."],
+      "troubleshooting": ["Een lege inbox betekent dat JS8Call geen opgeslagen inboxberichten heeft of dat de API niet verbonden is."],
+      "references": [{"label": "Officiële JS8Call API-documentatie", "href": "https://js8call.com/JS8Call-improved/d7/d15/md_docs_2API.html"}],
+      "related": ["chat", "monitor"]
+    },
+    {
+      "id": "monitor",
+      "title": "Bandmonitor",
+      "summary": "Analyseer ontvangen en verzonden verkeer, stations en radiopaden.",
+      "sections": [{"heading": "Kaart en historie", "body": "De kaart toont stations en waargenomen relaties binnen de gekozen band en historie. Je kunt wisselen tussen vlakke kaart en globe. Greyline en nachtweergave staan bij Instellingen."}, {"heading": "Verkeersweergaven", "body": "Verkeer is chronologisch, Per offset groepeert recente activiteit per offset en Laatst gehoord toont stations met hun laatste signaaldata. Gebruik het zoekicoon om op afzender of bericht te filteren; treffers worden gemarkeerd."}, {"heading": "Verbindingen", "body": "Een vaste gekleurde lijn betekent dat bij dat station een ontvangen SNR bekend is. Een subtiele gestippelde helft betekent dat de ontvangst-SNR aan die stationskant onbekend is. Selecteer een station of lijn voor details."}],
+      "steps": ["Kies band en historieperiode.", "Kies onder de kaart Verkeer, Per offset of Laatst gehoord.", "Klik op een station, verbinding of tabelregel voor de inspecteur.", "Gebruik filter en zoeken om de verkeersweergave te beperken."],
+      "troubleshooting": ["Een lege kaart kan betekenen dat er binnen de gekozen historie geen verkeer is of dat kaarttegels nog laden.", "Stations zonder betrouwbare positie kunnen een best-effort landlocatie krijgen; behandel die niet als precieze positie.", "Bij vertraagde data controleer je de verbinding en diagnose; live updates gebruiken WebSocket met een polling-fallback."],
+      "references": [{"label": "Officiële JS8Call API-documentatie", "href": "https://js8call.com/JS8Call-improved/d7/d15/md_docs_2API.html"}, {"label": "Officiële JS8Call-API", "href": "https://js8call.com/JS8Call-improved/d7/d15/md_docs_2API.html"}],
+      "related": ["global", "chat", "diagnostics", "settings"]
+    },
+    {
+      "id": "settings",
+      "title": "Instellingen",
+      "summary": "Configureer JS8Link en het verbonden JS8Call-station.",
+      "sections": [{"heading": "Applicatie", "body": "Kies taal, donker, licht, Forest Console of Field Light-thema, UTC of lokale tijd, kaartpop-ups, greyline, retentie en diagnose-instellingen."}, {"heading": "JS8Call", "body": "Het JS8Call-tabblad leest en wijzigt instellingen die de JS8Call-API aanbiedt, zoals bandpassfilter, TX-tekst, stationqueries, spot reporting en radiobediening."}, {"heading": "Onderhoud", "body": "Updates gebruiken de ingestelde repository en voeren database-migraties uit. Gegevens wissen verwijdert operationele data maar bewaart de configuratie."}],
+      "steps": ["Open Instellingen via het tandwiel.", "Kies Applicatie of JS8Call.", "Wijzig waarden en sla de instellingen op.", "Gebruik Diagnose om te controleren welke API-input, interpretatie en opslag uit een actie voortkwamen."],
+      "troubleshooting": ["Een instelling kan onbeschikbaar zijn wanneer JS8Call niet verbonden is of de API-versie de optie niet aanbiedt.", "Laat na een update de applicatie herstarten en de browser opnieuw laden voordat je opnieuw probeert."],
+      "references": [{"label": "Officiële JS8Call API-documentatie", "href": "https://js8call.com/JS8Call-improved/d7/d15/md_docs_2API.html"}, {"label": "Officiële JS8Call-gebruikershandleiding", "href": "https://js8call.com/JS8Call-improved/d6/d14/md_docs_2user__guide_2JS8Call__User__Guide.html"}],
+      "related": ["global", "diagnostics", "updates"]
+    },
+    {
+      "id": "diagnostics",
+      "title": "Diagnose",
+      "summary": "Volg ruwe input, leesbare interpretatie en verwerkingsresultaat.",
+      "sections": [{"heading": "Drie lagen", "body": "Ruw toont het API-bericht of de gebruikersactie, Interpretatie beschrijft de betekenis in duidelijke taal en Verwerking legt classificatie, opslag en uitgaande API-acties vast."}, {"heading": "Onderzoeken", "body": "Filter op bron, ernst of zoektekst. Selecteer een trace om de ruwe payload en iedere verwerkingsstap te bekijken."}],
+      "steps": ["Open Diagnose vanuit Instellingen.", "Filter op de bron of gebeurtenis die je onderzoekt.", "Selecteer een trace en vergelijk de drie lagen.", "Gebruik de protocolreferentie als de interpretatie niet bij het JS8Call-frame past."],
+      "troubleshooting": ["Geen traces betekent dat diagnose uitstaat of dat oudere traces door retentie zijn opgeschoond.", "Gefragmenteerde of ongeldige input blijft waar mogelijk als ruwe data zichtbaar en wordt niet als compleet bericht geïnterpreteerd."],
+      "references": [{"label": "Officiële JS8Call API-documentatie", "href": "https://js8call.com/JS8Call-improved/d7/d15/md_docs_2API.html"}, {"label": "Officiële JS8Call-gebruikershandleiding", "href": "https://js8call.com/JS8Call-improved/d6/d14/md_docs_2user__guide_2JS8Call__User__Guide.html"}],
+      "related": ["monitor", "settings"]
+    },
+    {
+      "id": "updates",
+      "title": "Updates",
+      "summary": "Controleer GitHub Releases en open de download voor jouw platform.",
+      "sections": [{"heading": "Updateproces", "body": "JS8Link controleert de officiële GitHub Releases, inclusief alpha-releases. Je ziet de huidige en beschikbare versie, de release-link en het passende platformbestand."}, {"heading": "Veilig uitvoeren", "body": "Alpha-releases worden handmatig bijgewerkt: sluit JS8Link, vervang de applicatiebestanden en start opnieuw. De persistente datamap blijft behouden en Alembic maakt vóór een noodzakelijke migratie een backup."}],
+      "steps": ["Open Instellingen en kies Controleren op updates.", "Bekijk de gemelde versie of commit.", "Bevestig de installatie.", "Wacht op de herstart en browserreload."],
+      "troubleshooting": ["Een repository zonder origin kan niet op updates worden gecontroleerd.", "Gebruik serverlog en Diagnose als repository, build of migratie mislukt."],
+      "references": [{"label": "Officiële JS8Call-gebruikershandleiding", "href": "https://js8call.com/JS8Call-improved/d6/d14/md_docs_2user__guide_2JS8Call__User__Guide.html"}],
+      "related": ["settings", "diagnostics"]
+    }
+  ]
+}

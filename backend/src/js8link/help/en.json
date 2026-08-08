@@ -1,0 +1,90 @@
+{
+  "language": "en",
+  "version": 1,
+  "topics": [
+    {
+      "id": "global",
+      "title": "Using JS8Link",
+      "summary": "JS8Link is a local station console for JS8Call-improved.",
+      "sections": [
+        {"heading": "Start here", "body": "Complete the setup wizard first. JS8Call-improved must be running with its TCP API enabled. The header then shows the live radio state and the main menu opens Chat, Messages and Band Monitor."},
+        {"heading": "A radio-console mindset", "body": "Blue represents reception and interactive radio data, amber represents transmission, and green represents a healthy connection. Frequencies, offsets, timestamps and callsigns use technical, easy-to-scan formatting."},
+        {"heading": "Working safely", "body": "JS8Link does not replace JS8Call. Radio settings and transmission actions are sent to the connected JS8Call API. Check the selected band, mode and offset before transmitting."}
+      ],
+      "steps": ["Run the setup wizard and test the JS8Call connection.", "Select a screen from the main menu.", "Open the contextual Help button in the top-right for task-specific guidance.", "Use Settings for language, theme, time display and JS8Call controls."],
+      "troubleshooting": ["If the console cannot connect, verify the JS8Call API host, port and API setting.", "If data is stale, check the JS8Call connection indicator and the diagnostics screen.", "If a control is unavailable, JS8Call may be disconnected or the API may not expose that operation."],
+      "references": [{"label": "Official JS8Call API documentation", "href": "https://js8call.com/JS8Call-improved/d7/d15/md_docs_2API.html"}, {"label": "Official JS8Call user guide", "href": "https://js8call.com/JS8Call-improved/d6/d14/md_docs_2user__guide_2JS8Call__User__Guide.html"}, {"label": "Official JS8Call API", "href": "https://js8call.com/JS8Call-improved/d7/d15/md_docs_2API.html"}],
+      "related": ["setup", "chat", "monitor", "settings"]
+    },
+    {
+      "id": "setup",
+      "title": "Setup wizard",
+      "summary": "Connect JS8Link to a running JS8Call-improved instance.",
+      "sections": [{"heading": "Connection", "body": "Enter the JS8Call host and TCP API port. The default port is 2442. Test the connection before continuing; the wizard verifies the API version."}, {"heading": "Application login", "body": "The optional login protects the JS8Link web application. It does not change JS8Call authentication or the radio connection."}, {"heading": "Finish", "body": "Review the connection and login summary, then save. Settings are stored in the JS8Link database."}],
+      "steps": ["Start configuration from the welcome screen.", "Enter the JS8Call host and port and choose Connection test.", "Optionally enable the JS8Link application login.", "Save the configuration and continue to the console."],
+      "troubleshooting": ["A refused connection usually means JS8Call is not running, the API is disabled, or the host/port is incorrect.", "The wizard cannot install JS8Call-improved for you; install and start it separately."],
+      "references": [{"label": "JS8Link protocol reference", "href": "https://js8call.com/JS8Call-improved/d7/d15/md_docs_2API.html"}],
+      "related": ["global", "settings"]
+    },
+    {
+      "id": "chat",
+      "title": "Chat",
+      "summary": "Exchange direct station-to-station messages with a selected callsign.",
+      "sections": [{"heading": "Conversation list", "body": "The left side lists direct conversations. A blue indicator means an unread received message, amber means your station was the last sender, and green means the conversation is read."}, {"heading": "Composer", "body": "Choose the delivery mode, speed and optional Send with Enter behavior before transmitting. Confirmed delivery requires JS8Link support at the other station; Best effort works with ordinary JS8Call messaging."}, {"heading": "Station details", "body": "The station inspector shows grid, QTH, signal data, protocol status and your notes. These notes are local to JS8Link."}],
+      "steps": ["Select a conversation or choose New chat.", "Review the band, mode, offset and delivery mode.", "Enter a message and send it with the button or Enter when enabled.", "Use the inspector to review or edit station information."],
+      "troubleshooting": ["Heartbeat traffic is deliberately excluded from chats; only direct messages intended for the conversation are shown.", "A confirmed message is disabled until JS8Link support has been detected at the other station.", "A queued message may wait until the selected-call and TX buffer rules allow transmission."],
+      "references": [{"label": "Official JS8Call API documentation", "href": "https://js8call.com/JS8Call-improved/d7/d15/md_docs_2API.html"}, {"label": "ARQ protocol reference", "href": "/help/docs/js8link-arq-v1.md"}],
+      "related": ["global", "settings", "diagnostics"]
+    },
+    {
+      "id": "messages",
+      "title": "Messages and inbox",
+      "summary": "Review stored station messages and synchronise the JS8Call inbox.",
+      "sections": [{"heading": "Current scope", "body": "The Messages screen is the home for stored direct station messages and delivery queues. Band traffic belongs in Band Monitor."}, {"heading": "Synchronisation", "body": "Use Inbox synchronise to request inbox data from JS8Call and store it in JS8Link. The operation does not transmit a user message."}],
+      "steps": ["Open Messages from the main menu.", "Choose Inbox synchronise when you want to refresh stored inbox data.", "Use Band Monitor for all decoded traffic, including heartbeats and activity frames."],
+      "troubleshooting": ["An empty inbox can mean JS8Call has no stored inbox messages or the API connection is unavailable."],
+      "references": [{"label": "Official JS8Call API documentation", "href": "https://js8call.com/JS8Call-improved/d7/d15/md_docs_2API.html"}],
+      "related": ["chat", "monitor"]
+    },
+    {
+      "id": "monitor",
+      "title": "Band Monitor",
+      "summary": "Inspect received and transmitted traffic, stations and radio paths.",
+      "sections": [{"heading": "Map and history", "body": "The map shows stations and observed relationships for the selected band and history window. The map can switch between flat map and globe. Greyline and night shading are controlled in Settings."}, {"heading": "Traffic views", "body": "Traffic is chronological traffic, By offset groups recent activity by offset, and Last heard lists stations with their latest signal data. Use the search icon to filter by sender or message text; matches are highlighted."}, {"heading": "Connections", "body": "A solid colored line represents a known received SNR at that station. A subtle dashed half means that the corresponding station-side received SNR is unknown. Selecting a station or line opens the inspector."}],
+      "steps": ["Select a band and history range.", "Use the tabs below the map to choose Traffic, By offset or Last heard.", "Click a station, connection or table row to open the inspector.", "Use the filter and search controls to narrow the traffic view."],
+      "troubleshooting": ["A blank map may mean there is no traffic in the selected history window or the map tiles are still loading.", "Stations without a reliable position can use a best-effort country location; inspect the station details before treating it as precise.", "If traffic appears late, check the connection indicator and diagnostics; live updates use the events WebSocket with a polling fallback."],
+      "references": [{"label": "Official JS8Call API documentation", "href": "https://js8call.com/JS8Call-improved/d7/d15/md_docs_2API.html"}, {"label": "Official JS8Call API", "href": "https://js8call.com/JS8Call-improved/d7/d15/md_docs_2API.html"}],
+      "related": ["global", "chat", "diagnostics", "settings"]
+    },
+    {
+      "id": "settings",
+      "title": "Settings",
+      "summary": "Configure the JS8Link application and the connected JS8Call station.",
+      "sections": [{"heading": "Application", "body": "Choose language, dark, light, Forest Console or Field Light theme, UTC or local time, map popups, greyline behavior, retention and diagnostics settings."}, {"heading": "JS8Call", "body": "The JS8Call tab reads and writes settings exposed by the JS8Call API, such as the bandpass filter, TX text, station queries, spot reporting and radio controls."}, {"heading": "Maintenance", "body": "Updates run through the configured repository and include database migrations. Purge removes operational data while retaining configuration."}],
+      "steps": ["Open Settings from the gear icon.", "Choose Application or JS8Call.", "Change values and save the settings.", "Use Diagnostics to confirm what API input, interpretation and persistence resulted from an action."],
+      "troubleshooting": ["A setting may be unavailable when JS8Call is disconnected or when the connected API version does not expose it.", "After an update, allow the application to restart and reload the browser before retrying a setting."],
+      "references": [{"label": "Official JS8Call API documentation", "href": "https://js8call.com/JS8Call-improved/d7/d15/md_docs_2API.html"}, {"label": "Official JS8Call user guide", "href": "https://js8call.com/JS8Call-improved/d6/d14/md_docs_2user__guide_2JS8Call__User__Guide.html"}],
+      "related": ["global", "diagnostics", "updates"]
+    },
+    {
+      "id": "diagnostics",
+      "title": "Diagnostics",
+      "summary": "Trace raw input, readable interpretation and processing results.",
+      "sections": [{"heading": "Three layers", "body": "Raw shows the API message or user action, Interpretation explains its meaning in operator language, and Processing records classification, persistence and outgoing API actions."}, {"heading": "Use diagnostics to investigate", "body": "Filter by source, severity or search text. Select a trace to inspect the raw payload and each processing step."}],
+      "steps": ["Open Diagnostics from Settings.", "Filter to the source or event you are investigating.", "Select a trace and compare the three layers.", "Use the protocol reference when the interpretation does not match the JS8Call frame."],
+      "troubleshooting": ["If no traces appear, diagnostics may be disabled or the retention period may have removed older entries.", "Malformed or fragmented input is retained as raw data when possible and should not be interpreted as a complete message."],
+      "references": [{"label": "Official JS8Call API documentation", "href": "https://js8call.com/JS8Call-improved/d7/d15/md_docs_2API.html"}, {"label": "Official JS8Call user guide", "href": "https://js8call.com/JS8Call-improved/d6/d14/md_docs_2user__guide_2JS8Call__User__Guide.html"}],
+      "related": ["monitor", "settings"]
+    },
+    {
+      "id": "updates",
+      "title": "Updates",
+      "summary": "Check GitHub Releases and open the matching platform download.",
+      "sections": [{"heading": "Update flow", "body": "JS8Link checks the canonical GitHub Releases page, including alpha releases. It shows the current version, available version, release link and matching platform artifact."}, {"heading": "Safe operation", "body": "Alpha releases use a manual update: close JS8Link, replace the application files, and start it again. The persistent data directory is kept and Alembic creates a backup before a required migration."}],
+      "steps": ["Open Settings and choose Check for updates.", "Review the reported version or commit.", "Confirm installation.", "Wait for the automatic restart and browser reload."],
+      "troubleshooting": ["A repository without a configured origin cannot be checked for updates.", "If the update fails, use the server log and Diagnostics to identify whether the repository, build or migration step failed."],
+      "references": [{"label": "Official JS8Call user guide", "href": "https://js8call.com/JS8Call-improved/d6/d14/md_docs_2user__guide_2JS8Call__User__Guide.html"}],
+      "related": ["settings", "diagnostics"]
+    }
+  ]
+}

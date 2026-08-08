@@ -1,0 +1,785 @@
+/* SPDX-License-Identifier: GPL-3.0-only
+ * Copyright (C) 2026  JS8Link contributors
+ */
+/* Precision pass: match the selected professional station-console reference. */
+:root {
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-interface: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-data: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  --console-bg: #080b0f;
+  --console-panel: #0c1015;
+  --console-raised: #11171d;
+  --console-hover: #162131;
+  --console-line: #252e38;
+  --console-line-strong: #36414c;
+  --console-rx: #3f96f6;
+  --console-tx: #f39a18;
+  --console-ok: #68c779;
+  --scope-hb: #102019;
+  --scope-normal: #0e1722;
+  --console-search-bg: rgba(243, 154, 24, 0.28);
+  --console-search-text: #fbbf24;
+}
+
+[data-theme="light"] {
+  --console-bg: #eef2f6;
+  --console-panel: #ffffff;
+  --console-raised: #f6f8fb;
+  --console-hover: #e6eef8;
+  --console-line: #c8d1db;
+  --console-line-strong: #9facba;
+  --console-rx: #166fc7;
+  --console-tx: #a95d00;
+  --console-ok: #257b3e;
+  --scope-hb: #e8f4eb;
+  --scope-normal: #edf5fd;
+  --console-search-bg: rgba(234, 179, 8, 0.35);
+  --console-search-text: #92400e;
+}
+
+[data-theme="high-contrast"] {
+  --console-bg: #000000;
+  --console-panel: #0a0a0a;
+  --console-raised: #141414;
+  --console-hover: #1e1e1e;
+  --console-line: #555555;
+  --console-line-strong: #888888;
+  --console-rx: #66b3ff;
+  --console-tx: #ffb347;
+  --console-ok: #66ff66;
+  --scope-hb: #1a1a1a;
+  --scope-normal: #141414;
+  --console-search-bg: rgba(255, 179, 71, 0.4);
+  --console-search-text: #ffb347;
+}
+
+/* Forest Console: an earthy, low-glare field-console theme. The semantic
+   blue/orange vocabulary is intentionally replaced by moss/lichen and clay
+   accents while preserving the existing layout and interaction hierarchy. */
+[data-theme="forest"] {
+  --console-bg: #0b110e;
+  --console-panel: #101914;
+  --console-raised: #17231b;
+  --console-hover: #203226;
+  --console-line: #2a3a2e;
+  --console-line-strong: #405844;
+  --console-text: #e9e3cf;
+  --console-muted: #a7ad98;
+  --console-faint: #707d6c;
+  --console-rx: #a4d77c;
+  --console-rx-soft: #243c27;
+  --console-tx: #e8942d;
+  --console-tx-soft: #4a2d13;
+  --console-accent-ink: #10150f;
+  --console-ok: #a4d77c;
+  --scope-hb: #243c27;
+  --scope-normal: #15231a;
+  --console-danger: #e36d5b;
+  --console-search-bg: rgba(232, 148, 45, 0.3);
+  --console-search-text: #f1b55d;
+  color: var(--console-text);
+  background: var(--console-bg);
+  color-scheme: dark;
+}
+
+[data-theme="forest"] body,
+[data-theme="forest"] .app {
+  color: var(--console-text);
+  background: var(--console-bg);
+}
+
+/* Field Light: warm ivory surfaces with olive RX and terracotta TX accents. */
+[data-theme="field-light"] {
+  --console-bg: #f5f1e8;
+  --console-panel: #fbfaf6;
+  --console-raised: #f8f5ed;
+  --console-hover: #eeeadc;
+  --console-line: #ddd7c8;
+  --console-line-strong: #c7beac;
+  --console-text: #2d2b26;
+  --console-muted: #68645a;
+  --console-faint: #918a7b;
+  --console-rx: #5d8b45;
+  --console-rx-soft: #e4eddb;
+  --console-tx: #d85b22;
+  --console-tx-soft: #fbe3d6;
+  --console-accent-ink: #fffaf2;
+  --console-ok: #5d8b45;
+  --scope-hb: #e4eddb;
+  --scope-normal: #f8f5ed;
+  --console-danger: #bd3f2d;
+  --console-search-bg: rgba(216, 91, 34, 0.18);
+  --console-search-text: #994018;
+  color: var(--console-text);
+  background: var(--console-bg);
+  color-scheme: light;
+}
+
+[data-theme="field-light"] body,
+[data-theme="field-light"] .app {
+  color: var(--console-text);
+  background: var(--console-bg);
+}
+
+[data-theme="field-light"] .chat-message-outgoing .chat-bubble {
+  border-color: var(--console-tx);
+  background: var(--console-tx-soft);
+}
+
+[data-theme="field-light"] .tx-row {
+  background: color-mix(in srgb, var(--console-tx) 12%, var(--console-panel));
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: var(--font-interface);
+}
+
+.topbar {
+  min-height: 68px;
+  grid-template-columns: 150px 380px minmax(0, 1fr);
+  background: var(--console-panel);
+}
+
+.station-brand {
+  min-width: 150px;
+  gap: 8px;
+  padding: 8px 14px;
+}
+
+.station-brand > svg {
+  color: var(--console-rx);
+}
+
+.brand {
+  font-family: var(--font-interface);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.station-brand-meta {
+  gap: 5px;
+  font-size: 9px;
+  letter-spacing: 0.035em;
+}
+
+.main-menu {
+  width: 380px;
+}
+
+.menu-item {
+  min-width: 0;
+  flex: 1;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  padding: 0 10px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.menu-item,
+.menu-item span {
+  display: flex;
+}
+
+.menu-item svg {
+  color: var(--console-muted);
+}
+
+.menu-item.active svg {
+  color: var(--console-rx);
+}
+
+.menu-item.active {
+  color: var(--console-rx);
+}
+
+.header-actions {
+  overflow-x: auto;
+}
+
+.station-instrument {
+  min-width: 76px;
+  padding: 7px 11px;
+  font-family: var(--font-data);
+}
+
+.instrument-label {
+  margin-bottom: 3px;
+  font-family: var(--font-interface);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.095em;
+}
+
+.vfo-instrument {
+  min-width: 204px;
+  align-items: flex-start;
+  padding-left: 16px;
+}
+
+.vfo-frequency {
+  color: var(--console-text);
+  font-size: clamp(22px, 2.05vw, 30px);
+  font-weight: 400;
+  letter-spacing: 0.025em;
+  line-height: 1;
+}
+
+.band-instrument {
+  min-width: 92px;
+}
+
+.instrument-select {
+  font: 500 14px/1.2 var(--font-data);
+}
+
+.mode-instrument {
+  min-width: 132px;
+}
+
+.mode-value {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: var(--font-data);
+}
+
+.mode-instrument .mode-value strong {
+  color: var(--console-rx);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.mode-value b {
+  padding-left: 10px;
+  border-left: 1px solid var(--console-line);
+  color: var(--console-text);
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.offset-instrument {
+  min-width: 94px;
+}
+
+.offset-instrument strong {
+  color: var(--console-text);
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.trx-instrument {
+  min-width: 55px;
+  align-items: center;
+  gap: 2px;
+  padding-inline: 8px;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+}
+
+.trx-instrument:focus-visible {
+  outline: 2px solid var(--console-rx);
+  outline-offset: -2px;
+}
+
+.trx-instrument svg,
+.trx-instrument strong {
+  color: var(--console-faint);
+}
+
+.trx-instrument strong {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.trx-instrument span {
+  position: absolute;
+  right: 5px;
+  bottom: 4px;
+  color: var(--console-muted);
+  font-size: 9px;
+}
+
+/* Steady on-state: RX/TX enabled but no activity right now. */
+.trx-instrument.rx.enabled svg,
+.trx-instrument.rx.enabled strong {
+  color: color-mix(in srgb, var(--console-rx) 78%, var(--console-faint));
+}
+
+.trx-instrument.tx.enabled svg,
+.trx-instrument.tx.enabled strong {
+  color: color-mix(in srgb, var(--console-tx) 78%, var(--console-faint));
+}
+
+/* Disabled state: RX/TX switched off. */
+.trx-instrument.disabled {
+  opacity: 0.4;
+}
+
+/* Hover gives a subtle affordance; active RX/TX gets a solid instrument
+   colour so it remains visible in the dense dark console header. */
+.trx-instrument.rx:hover,
+.trx-instrument.rx.live {
+  background: color-mix(in srgb, var(--console-rx) 11%, var(--console-panel));
+  box-shadow: inset 0 -2px var(--console-rx);
+}
+
+.trx-instrument.rx:hover svg,
+.trx-instrument.rx:hover strong,
+.trx-instrument.rx.live svg,
+.trx-instrument.rx.live strong {
+  color: var(--console-rx);
+}
+
+.trx-instrument.tx:hover,
+.trx-instrument.tx.live {
+  background: color-mix(in srgb, var(--console-tx) 11%, var(--console-panel));
+  box-shadow: inset 0 -2px var(--console-tx);
+}
+
+.trx-instrument.tx:hover svg,
+.trx-instrument.tx:hover strong,
+.trx-instrument.tx.live svg,
+.trx-instrument.tx.live strong {
+  color: var(--console-tx);
+}
+
+.trx-instrument.rx.active {
+  color: var(--console-accent-ink);
+  background: var(--console-rx);
+  box-shadow:
+    inset 0 -2px color-mix(in srgb, var(--console-accent-ink) 35%, transparent),
+    0 0 14px color-mix(in srgb, var(--console-rx) 42%, transparent);
+}
+
+.trx-instrument.rx.active svg,
+.trx-instrument.rx.active strong,
+.trx-instrument.rx.active span {
+  color: var(--console-accent-ink);
+}
+
+.trx-instrument.tx.active {
+  color: var(--console-accent-ink);
+  background: var(--console-tx);
+  box-shadow:
+    inset 0 -2px color-mix(in srgb, var(--console-accent-ink) 35%, transparent),
+    0 0 14px color-mix(in srgb, var(--console-tx) 42%, transparent);
+}
+
+.trx-instrument.tx.active svg,
+.trx-instrument.tx.active strong,
+.trx-instrument.tx.active span {
+  color: var(--console-accent-ink);
+}
+
+.connection-instrument {
+  min-width: 126px;
+  grid-template-columns: 20px 1fr;
+  border-left: 1px solid var(--console-line-strong);
+  font-family: var(--font-interface);
+}
+
+.connection-instrument strong {
+  font: 600 11px/1.15 var(--font-data);
+}
+
+.connection-instrument span {
+  color: var(--console-ok);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.time-instrument {
+  min-width: 112px;
+  font-family: var(--font-data);
+}
+
+.time-instrument.time-single {
+  grid-template-columns: auto 1fr;
+  gap: 7px;
+}
+
+.time-instrument.time-single time {
+  color: var(--console-text);
+  font: 500 13px/1.2 var(--font-data);
+}
+
+.time-instrument.time-dual {
+  min-width: 142px;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  align-content: center;
+}
+
+.time-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  line-height: 1.05;
+}
+
+.time-line time {
+  color: var(--console-text);
+  font: 500 11px/1.1 var(--font-data);
+}
+
+.utc-time-line {
+  color: var(--console-muted);
+}
+
+.utc-time-line time {
+  color: var(--console-muted);
+  font-size: 10px;
+}
+
+.settings-menu-item {
+  width: 70px;
+  flex-basis: 70px;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 9px;
+}
+
+.band-scope {
+  position: relative;
+  z-index: 5;
+  display: grid;
+  height: 38px;
+  grid-template-columns: 118px minmax(180px, 1fr) 116px;
+  align-items: stretch;
+  border-bottom: 1px solid var(--console-line-strong);
+  color: var(--console-text);
+  background: var(--console-panel);
+}
+
+.band-scope-label,
+.band-scope-legend {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 12px;
+  border-right: 1px solid var(--console-line);
+  color: var(--console-rx);
+}
+
+.band-scope-label div {
+  display: flex;
+  flex-direction: column;
+}
+
+.band-scope-label span {
+  color: var(--console-faint);
+  font: 500 7px/1 var(--font-interface);
+  letter-spacing: 0.1em;
+}
+
+.band-scope-label strong {
+  color: var(--console-text);
+  font: 500 10px/1.2 var(--font-data);
+}
+
+.band-scope canvas {
+  width: 100%;
+  height: 37px;
+}
+
+.band-scope-legend {
+  justify-content: center;
+  gap: 12px;
+  border-right: 0;
+  border-left: 1px solid var(--console-line);
+  font: 500 9px/1 var(--font-data);
+}
+
+.band-scope-legend span {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.band-scope-legend .rx {
+  color: var(--console-rx);
+}
+
+.band-scope-legend .tx {
+  color: var(--console-tx);
+}
+
+/* Search highlight in monitor tables and chat — overrides browser default
+   yellow which is unreadable on dark backgrounds. */
+mark {
+  border-radius: 2px;
+  padding: 0 1px;
+  color: var(--console-search-text);
+  background: var(--console-search-bg);
+}
+
+.grid > .card,
+.monitor-layout,
+.chat-shell,
+[data-theme="light"] .chat-shell {
+  height: calc(100dvh - 106px);
+  max-height: calc(100dvh - 106px);
+}
+
+.chat-presence {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-radius: 50%;
+  background: var(--console-faint);
+}
+
+.chat-presence.available,
+.chat-presence.rx {
+  background: var(--console-rx);
+}
+
+.chat-presence.ok {
+  background: var(--console-ok);
+}
+
+.chat-presence.tx {
+  background: var(--console-tx);
+}
+
+.chat-presence.strong {
+  background: var(--console-ok);
+}
+
+.chat-presence.weak {
+  background: var(--console-tx);
+}
+
+.chat-sidebar-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chat-icon-button,
+.chat-archive-button {
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--console-line);
+  border-radius: var(--console-radius);
+  color: var(--console-muted);
+  background: transparent;
+  cursor: pointer;
+}
+
+.chat-icon-button {
+  width: 34px;
+  height: 34px;
+}
+
+.chat-icon-button:hover,
+.chat-archive-button:hover {
+  border-color: var(--console-rx);
+  color: var(--console-rx);
+  background: var(--console-rx-soft);
+}
+
+.chat-list-main {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.chat-archive-button {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+}
+
+.chat-direction-badge,
+.message-direction {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  padding: 1px 3px;
+  font: 500 9px/1 var(--font-data);
+}
+
+.chat-direction-badge.rx,
+.message-direction.rx {
+  color: var(--console-rx);
+  background: color-mix(in srgb, var(--console-rx) 10%, transparent);
+}
+
+.chat-direction-badge.tx,
+.message-direction.tx {
+  color: var(--console-tx);
+  background: color-mix(in srgb, var(--console-tx) 10%, transparent);
+}
+
+.message-direction {
+  margin-right: 6px;
+  vertical-align: 1px;
+}
+
+.chat-message-outgoing .chat-message-header {
+  color: var(--console-tx);
+}
+
+.chat-message-outgoing .chat-bubble,
+[data-theme="light"] .chat-message-outgoing .chat-bubble {
+  border-color: color-mix(in srgb, var(--console-tx) 65%, var(--console-line));
+  background: color-mix(in srgb, var(--console-tx) 9%, var(--console-raised));
+}
+
+@media (min-width: 1200px) {
+  .chat-shell,
+  [data-theme="light"] .chat-shell {
+    grid-template-columns: minmax(330px, 27vw) minmax(0, 1fr) minmax(300px, 23vw);
+  }
+}
+
+.message-scroller-item {
+  width: 100%;
+  border-bottom: 1px solid color-mix(in srgb, var(--console-line) 72%, transparent);
+}
+
+.chat-message,
+.chat-message-outgoing {
+  width: 100%;
+  max-width: none;
+  align-self: stretch;
+  align-items: flex-start;
+  flex-direction: row;
+  gap: 0;
+  padding: 11px 8px 13px;
+}
+
+.chat-message-avatar {
+  display: none;
+}
+
+.chat-message-content {
+  width: 100%;
+}
+
+.chat-message-header,
+.chat-message-outgoing .chat-message-header {
+  margin: 0 0 5px;
+  color: var(--console-text);
+  text-align: left;
+}
+
+.chat-bubble,
+[data-theme="light"] .chat-bubble,
+.chat-message-outgoing .chat-bubble,
+[data-theme="light"] .chat-message-outgoing .chat-bubble {
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  color: var(--console-text);
+  background: transparent;
+  box-shadow: none;
+}
+
+.chat-bubble-content {
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.chat-message-footer,
+.chat-message-outgoing .chat-message-footer {
+  margin: 6px 0 0;
+  color: var(--console-faint);
+  text-align: left;
+}
+
+@media (max-width: 1199px) {
+  .topbar {
+    grid-template-columns: 150px minmax(0, 1fr);
+  }
+
+  .main-menu {
+    width: auto;
+  }
+
+  .band-scope {
+    height: 34px;
+  }
+
+  .band-scope canvas {
+    height: 33px;
+  }
+
+  .grid > .card,
+  .monitor-layout,
+  .chat-shell,
+  [data-theme="light"] .chat-shell {
+    height: calc(100dvh - 163px);
+    max-height: calc(100dvh - 163px);
+  }
+}
+
+@media (max-width: 767px) {
+  .topbar {
+    grid-template-columns: 118px minmax(0, 1fr);
+  }
+
+  .station-brand {
+    min-width: 118px;
+  }
+
+  .menu-item {
+    min-width: 60px;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 9px;
+  }
+
+  .menu-item svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .vfo-instrument {
+    min-width: 178px;
+  }
+
+  .vfo-frequency {
+    font-size: 22px;
+  }
+
+  .band-scope {
+    grid-template-columns: 78px minmax(180px, 1fr);
+    overflow-x: auto;
+  }
+
+  .band-scope-label {
+    padding-inline: 8px;
+  }
+
+  .band-scope-legend {
+    display: none;
+  }
+
+  .grid > .card,
+  .monitor-layout,
+  .chat-shell,
+  [data-theme="light"] .chat-shell {
+    height: calc(100dvh - 163px);
+    max-height: calc(100dvh - 163px);
+  }
+}

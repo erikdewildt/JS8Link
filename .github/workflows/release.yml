@@ -1,0 +1,183 @@
+name: Build and publish JS8Link alpha release
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: >-
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.head.ref == 'develop' &&
+      github.event.pull_request.base.ref == 'main'
+    name: Build ${{ matrix.platform }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            platform: windows-x86_64
+            archive: zip
+          - os: ubuntu-latest
+            platform: linux-x86_64
+            archive: tar.gz
+          - os: macos-14
+            platform: macos-arm64
+            archive: tar.gz
+          - os: macos-13
+            platform: macos-x86_64
+            archive: tar.gz
+    steps:
+      - name: Check out the exact merge commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+
+      - name: Read and validate version
+        shell: bash
+        run: |
+          version=$(cat VERSION)
+          [[ "$version" =~ ^0\.[0-9]+\.[0-9]+$ ]]
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+          echo "Archive: JS8Link-$version-${{ matrix.platform }}.${{ matrix.archive }}"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: backend/uv.lock
+
+      - name: Install locked dependencies
+        run: uv sync --project backend --all-groups --locked
+
+      - name: Build the onedir executable
+        shell: bash
+        run: uv run --project backend python scripts/build-executable.py
+
+      - name: Smoke-test the packaged executable (Unix)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          ./dist/JS8Link/JS8Link --no-browser --data-dir "$RUNNER_TEMP/js8link-data" --port 18008 >"$RUNNER_TEMP/js8link.log" 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do
+            curl --fail --silent http://127.0.0.1:18008/api/health && exit 0
+            sleep 1
+          done
+          cat "$RUNNER_TEMP/js8link.log"
+          exit 1
+
+      - name: Smoke-test the packaged executable (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $process = Start-Process -FilePath .\dist\JS8Link\JS8Link.exe -ArgumentList '--no-browser','--data-dir',"$env:RUNNER_TEMP\js8link-data",'--port','18008' -PassThru
+          try {
+            for ($attempt = 0; $attempt -lt 30; $attempt++) {
+              try { Invoke-WebRequest http://127.0.0.1:18008/api/health -UseBasicParsing | Out-Null; exit 0 } catch { Start-Sleep -Seconds 1 }
+            }
+            throw 'Packaged JS8Link did not become ready'
+          } finally { Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue }
+
+      - name: Create release archive (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force release | Out-Null
+          Copy-Item LICENSE, README.md, THIRD_PARTY_NOTICES.md -Destination dist\JS8Link
+          Compress-Archive -Path dist\JS8Link -DestinationPath "release\JS8Link-$env:VERSION-${{ matrix.platform }}.zip"
+
+      - name: Create release archive (Unix)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          mkdir -p release
+          cp LICENSE README.md THIRD_PARTY_NOTICES.md dist/JS8Link/
+          tar -czf "release/JS8Link-$VERSION-${{ matrix.platform }}.tar.gz" -C dist JS8Link
+
+      - name: Upload platform archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: JS8Link-${{ matrix.platform }}
+          path: release/*
+
+  release:
+    if: >-
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.head.ref == 'develop' &&
+      github.event.pull_request.base.ref == 'main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out the exact merge commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+
+      - name: Prepare release and prevent duplicate tags
+        id: metadata
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(cat VERSION)
+          tag="v$version"
+          if git ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null 2>&1; then
+            echo "Release tag $tag already exists" >&2
+            exit 1
+          fi
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "GitHub release $tag already exists" >&2
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Download platform archives
+        uses: actions/download-artifact@v4
+        with:
+          pattern: JS8Link-*
+          path: release
+          merge-multiple: true
+
+      - name: Generate checksums
+        shell: bash
+        run: sha256sum release/* > release/SHA256SUMS.txt
+
+      - name: Tag the exact merge commit
+        shell: bash
+        run: |
+          git tag -a "${{ steps.metadata.outputs.tag }}" "${{ github.event.pull_request.merge_commit_sha }}" -m "JS8Link ${{ steps.metadata.outputs.version }} Alpha"
+          git push origin "${{ steps.metadata.outputs.tag }}"
+
+      - name: Publish GitHub prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.metadata.outputs.tag }}" release/* \
+            --title "JS8Link ${{ steps.metadata.outputs.version }} Alpha" \
+            --prerelease \
+            --notes "JS8Link ${{ steps.metadata.outputs.version }} Alpha\n\nThis is an alpha release. JS8Call must be running with its TCP API enabled. JS8Link connects over TCP to 127.0.0.1:2442 by default.\n\nLicense: GNU General Public License v3.0 (GPL-3.0-only)."
+
+# macOS signing and notarization can be added before archive upload once
+# Developer ID credentials and App Store Connect secrets are available.

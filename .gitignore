@@ -1,0 +1,37 @@
+# ── Runtime data ──────────────────────────────────────────────────────────
+data/
+
+# ── Python ───────────────────────────────────────────────────────────────
+backend/.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+
+# ── Node / Frontend ──────────────────────────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/tsconfig.tsbuildinfo
+frontend/playwright-report/
+frontend/test-results/
+
+# ── Build output ─────────────────────────────────────────────────────────
+build/
+dist/
+*.spec.bak
+
+# ── Secrets ──────────────────────────────────────────────────────────────
+.env
+
+# ── AI / Editor caches ───────────────────────────────────────────────────
+.codex/
+.agents/
+
+# ── OS junk ──────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
