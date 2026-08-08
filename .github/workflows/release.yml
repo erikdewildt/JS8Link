@@ -67,8 +67,11 @@ jobs:
           enable-cache: true
           cache-dependency-glob: backend/uv.lock
 
+      - name: Install portable build Python
+        run: uv python install 3.12
+
       - name: Install locked dependencies
-        run: uv sync --project backend --all-groups --locked
+        run: uv sync --project backend --python 3.12 --all-groups --locked
 
       - name: Build the onedir executable
         shell: bash
