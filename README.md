@@ -9,7 +9,7 @@ communication over JS8. A simple station-to-station messaging workflow will be e
 releases. JS8Link is also intended to support emergency communications (EMCOMM), where clear
 status, dependable delivery workflows, and an auditable radio history are important.
 
-> **Alpha status:** `0.0.1` is an early alpha. Test it carefully, keep database backups, and do
+> **Alpha status:** `0.0.2` is an early alpha. Test it carefully, keep database backups, and do
 > not depend on it as the only channel for safety-critical communication.
 
 JS8Link is an independent project and is not an official part of JS8Call.
@@ -44,8 +44,12 @@ SHA-256 checksums.
 
 1. Download `JS8Link-<version>-windows-x86_64.zip` from the releases page.
 2. Extract it to a directory owned by your user.
-3. Start `JS8Link.exe`.
+3. Double-click `Start-JS8Link.bat` or start `JS8Link.exe` directly.
 4. The default browser opens at `http://127.0.0.1:8008`.
+
+The Windows archive is an application folder rather than an installer. It contains the executable
+and all runtime resources, so Python and Node.js are not required. The batch launcher keeps the
+working directory next to the executable and forwards optional arguments such as `--data-dir`.
 
 Alpha binaries may trigger Windows SmartScreen because they are not code-signed yet. Verify the
 download checksum and use the normal Windows option to allow a binary you trust; never disable
@@ -54,22 +58,28 @@ Windows security globally.
 ### Linux
 
 ```bash
-tar -xzf JS8Link-0.0.1-linux-x86_64.tar.gz
+tar -xzf JS8Link-<version>-linux-x86_64.tar.gz
 cd JS8Link
-chmod +x JS8Link
-./JS8Link
+./start-js8link.sh
 ```
 
-Do not use `sudo` for normal operation. The Linux binary is built on a current Ubuntu runner and
-may require a compatible glibc version on older distributions.
+The archive contains the executable, its bundled resources and `start-js8link.sh`. The launcher
+is useful from a terminal and forwards command-line options. The Linux binary is built on a
+current Ubuntu runner and may require a compatible glibc version on older distributions.
+
+Do not use `sudo` for normal operation.
 
 ### macOS
 
-Use `JS8Link-<version>-macos-arm64.tar.gz` on Apple Silicon or the `macos-x86_64` archive on
-Intel when it is available. Extract the archive and run `./JS8Link`. The alpha builds are not
-signed or notarized yet. If Gatekeeper warns, use Control-click → Open or the specific
-**Open Anyway** action in **System Settings → Privacy & Security**. Do not disable Gatekeeper
-globally.
+Use `JS8Link-<version>-macos-arm64.dmg` on Apple Silicon or the `macos-x86_64` image on Intel.
+Open the disk image and drag `JS8Link.app` to Applications, or run it directly from the mounted
+image. The app bundle contains the FastAPI server, frontend and Python runtime; no Terminal,
+Python or Node.js setup is needed.
+
+The alpha builds are not signed or notarized yet. If Gatekeeper warns, use Control-click → Open or
+the specific **Open Anyway** action in **System Settings → Privacy & Security**. Do not disable
+Gatekeeper globally. The packaging workflow already creates a native `.app` and `.dmg`; signing
+and notarization can be added later without changing the application runtime.
 
 ## Configure JS8Call
 
@@ -120,7 +130,7 @@ application on a network is an intentional, separately secured decision.
 
 The application checks GitHub Releases, including alpha/prerelease versions, without blocking
 normal local operation. It shows the current version, available version, release notes and the
-platform artifact link. Version `0.0.1` does not replace its own executable automatically: close
+platform artifact link. Version `0.0.2` does not replace its own executable automatically: close
 JS8Link, download the new release, replace the application files, and start it again. Alembic
 creates a database backup before a required schema migration.
 
@@ -199,15 +209,22 @@ just test
 just check
 ```
 
-Build a local onedir executable on the target operating system:
+Build a local package on the target operating system:
 
 ```bash
 python3 scripts/build-executable.py
 ```
 
 The script builds the frontend with `npm ci` and `npm run build`, then runs the explicit
-`packaging/js8link.spec` PyInstaller configuration. The result is `dist/JS8Link/JS8Link` (or
-`JS8Link.exe`). PyInstaller builds are native per target OS; they are not cross-platform binaries.
+`packaging/js8link.spec` PyInstaller configuration. On Windows and Linux the result is
+`dist/JS8Link/` with the executable and resources. On macOS it additionally produces
+`dist/JS8Link.app`. PyInstaller builds are native per target OS; they are not cross-platform
+binaries.
+
+The release workflow packages these outputs as a Windows ZIP, a Linux tarball and a macOS DMG.
+Windows and Linux remain small onedir packages because the executable needs its bundled Python
+extensions, frontend assets and migration resources next to it. This still behaves as a single
+application for end users: there is no separate runtime installation or development server.
 
 ## Repository and release process
 
