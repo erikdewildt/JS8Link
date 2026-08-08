@@ -173,6 +173,8 @@ jobs:
       - name: Tag the exact merge commit
         shell: bash
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git tag -a "${{ steps.metadata.outputs.tag }}" "${{ github.event.pull_request.merge_commit_sha }}" -m "JS8Link ${{ steps.metadata.outputs.version }} Alpha"
           git push origin "${{ steps.metadata.outputs.tag }}"
 
