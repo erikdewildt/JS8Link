@@ -13,3 +13,7 @@ All notable user-facing changes to JS8Link are documented here. The format follo
 - Added persistent per-user data directories, startup diagnostics and safe database backups before
   required migrations.
 - Added GitHub Releases metadata and manual update checks for alpha packages.
+
+### Fixed
+
+- Fixed standalone release bundles so packaged frequency presets and other runtime data are included.

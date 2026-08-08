@@ -10,6 +10,9 @@ FRONTEND_DIST = ROOT / "frontend" / "dist"
 datas = [
     (str(FRONTEND_DIST), "frontend/dist"),
     (str(BACKEND / "alembic"), "alembic"),
+    # Runtime-loaded JSON resources are not reliably discovered by
+    # collect_data_files when the package is built from the source tree.
+    (str(BACKEND / "src" / "js8link" / "data"), "js8link/data"),
     (str(BACKEND / "alembic.ini"), "."),
     (str(ROOT / "VERSION"), "."),
     (str(ROOT / "CHANGELOG.md"), "."),
