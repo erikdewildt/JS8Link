@@ -1,3 +1,4 @@
+import sys
 from pathlib import Path
 
 from PyInstaller.utils.hooks import collect_data_files, collect_submodules
@@ -58,3 +59,14 @@ coll = COLLECT(
     upx=False,
     name="JS8Link",
 )
+
+# On macOS, wrap the onedir contents in a native application bundle.  Windows
+# and Linux intentionally keep the onedir layout: it is more transparent for
+# troubleshooting and lets the launcher pass command-line options directly to
+# the embedded executable.
+if sys.platform == "darwin":
+    app = BUNDLE(
+        coll,
+        name="JS8Link.app",
+        bundle_identifier="org.js8link.JS8Link",
+    )

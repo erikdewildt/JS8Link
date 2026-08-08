@@ -8,6 +8,8 @@ All notable user-facing changes to JS8Link are documented here. The format follo
 
 ### Added
 
+- Added platform-native release packaging: a macOS application/DMG, a Windows launcher and a
+  Linux launcher alongside the standalone executable.
 - Added the first standalone alpha distribution for Windows, Linux and macOS with bundled Python,
   frontend assets and Alembic migrations.
 - Added persistent per-user data directories, startup diagnostics and safe database backups before

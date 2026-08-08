@@ -28,10 +28,10 @@ jobs:
             archive: tar.gz
           - os: macos-14
             platform: macos-arm64
-            archive: tar.gz
+            archive: dmg
           - os: macos-15-intel
             platform: macos-x86_64
-            archive: tar.gz
+            archive: dmg
     steps:
       - name: Check out the exact merge commit
         uses: actions/checkout@v4
@@ -81,7 +81,12 @@ jobs:
         if: runner.os != 'Windows'
         shell: bash
         run: |
-          ./dist/JS8Link/JS8Link --no-browser --data-dir "$RUNNER_TEMP/js8link-data" --port 18008 >"$RUNNER_TEMP/js8link.log" 2>&1 &
+          if [[ "$RUNNER_OS" == "macOS" ]]; then
+            executable="./dist/JS8Link.app/Contents/MacOS/JS8Link"
+          else
+            executable="./dist/JS8Link/JS8Link"
+          fi
+          "$executable" --no-browser --data-dir "$RUNNER_TEMP/js8link-data" --port 18008 >"$RUNNER_TEMP/js8link.log" 2>&1 &
           pid=$!
           trap 'kill "$pid" 2>/dev/null || true' EXIT
           for attempt in {1..30}; do
@@ -108,7 +113,7 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force release | Out-Null
-          Copy-Item LICENSE, README.md, THIRD_PARTY_NOTICES.md -Destination dist\JS8Link
+          Copy-Item LICENSE, README.md, THIRD_PARTY_NOTICES.md, packaging\Start-JS8Link.bat -Destination dist\JS8Link
           Compress-Archive -Path dist\JS8Link -DestinationPath "release\JS8Link-$env:VERSION-${{ matrix.platform }}.zip"
 
       - name: Create release archive (Unix)
@@ -116,8 +121,21 @@ jobs:
         shell: bash
         run: |
           mkdir -p release
-          cp LICENSE README.md THIRD_PARTY_NOTICES.md dist/JS8Link/
-          tar -czf "release/JS8Link-$VERSION-${{ matrix.platform }}.tar.gz" -C dist JS8Link
+          if [[ "$RUNNER_OS" == "macOS" ]]; then
+            mkdir -p release/macos
+            cp -R dist/JS8Link.app release/macos/JS8Link.app
+            cp LICENSE README.md THIRD_PARTY_NOTICES.md release/macos/
+            hdiutil create \
+              -volname JS8Link \
+              -srcfolder release/macos \
+              -ov \
+              -format UDZO \
+              "release/JS8Link-$VERSION-${{ matrix.platform }}.dmg"
+          else
+            cp LICENSE README.md THIRD_PARTY_NOTICES.md packaging/start-js8link.sh dist/JS8Link/
+            chmod +x dist/JS8Link/start-js8link.sh
+            tar -czf "release/JS8Link-$VERSION-${{ matrix.platform }}.tar.gz" -C dist JS8Link
+          fi
 
       - name: Upload platform archive
         uses: actions/upload-artifact@v4
