@@ -1,0 +1,14 @@
+[
+  {"band": "160m", "dial": 1843500, "label": "1.8435 MHz (160m)"},
+  {"band": "80m", "dial": 3578000, "label": "3.578 MHz (80m)"},
+  {"band": "60m", "dial": 5363000, "label": "5.363 MHz (60m)"},
+  {"band": "40m", "dial": 7078000, "label": "7.078 MHz (40m)"},
+  {"band": "30m", "dial": 10130000, "label": "10.130 MHz (30m)"},
+  {"band": "20m", "dial": 14078000, "label": "14.078 MHz (20m)"},
+  {"band": "17m", "dial": 18104000, "label": "18.104 MHz (17m)"},
+  {"band": "15m", "dial": 21078000, "label": "21.078 MHz (15m)"},
+  {"band": "12m", "dial": 24922000, "label": "24.922 MHz (12m)"},
+  {"band": "10m", "dial": 28078000, "label": "28.078 MHz (10m)"},
+  {"band": "6m", "dial": 50318000, "label": "50.318 MHz (6m)"},
+  {"band": "2m", "dial": 144178000, "label": "144.178 MHz (2m)"}
+]

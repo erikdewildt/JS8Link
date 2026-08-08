@@ -1,5 +1,7 @@
 # ── Runtime data ──────────────────────────────────────────────────────────
 data/
+!backend/src/js8link/data/
+!backend/src/js8link/data/*.json
 
 # ── Python ───────────────────────────────────────────────────────────────
 backend/.venv/
