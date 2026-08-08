@@ -122,12 +122,14 @@ jobs:
         run: |
           mkdir -p release
           if [[ "$RUNNER_OS" == "macOS" ]]; then
-            mkdir -p release/macos
-            cp -R dist/JS8Link.app release/macos/JS8Link.app
-            cp LICENSE README.md THIRD_PARTY_NOTICES.md release/macos/
+            macos_bundle="$RUNNER_TEMP/js8link-macos-bundle"
+            rm -rf "$macos_bundle"
+            mkdir -p "$macos_bundle"
+            cp -R dist/JS8Link.app "$macos_bundle/JS8Link.app"
+            cp LICENSE README.md THIRD_PARTY_NOTICES.md "$macos_bundle/"
             hdiutil create \
               -volname JS8Link \
-              -srcfolder release/macos \
+              -srcfolder "$macos_bundle" \
               -ov \
               -format UDZO \
               "release/JS8Link-$VERSION-${{ matrix.platform }}.dmg"

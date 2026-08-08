@@ -18,4 +18,5 @@ All notable user-facing changes to JS8Link are documented here. The format follo
 
 ### Fixed
 
+- Fixed release checksum generation for macOS application images.
 - Fixed standalone release bundles so packaged frequency presets and other runtime data are included.
