@@ -6,6 +6,10 @@ All notable user-facing changes to JS8Link are documented here. The format follo
 
 ## [Unreleased]
 
+### Fixed
+
+- Heartbeat responses transmitted by the local station no longer appear as chats with itself; they remain available in Band Monitor.
+
 ### Added
 
 - Added platform-native release packaging: a macOS application/DMG, a Windows launcher and a

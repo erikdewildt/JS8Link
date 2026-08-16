@@ -187,6 +187,7 @@ class TransmittedMessage(Base):
     delivered_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     last_error: Mapped[str | None] = mapped_column(Text, nullable=True)
     tx_frame_type: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    is_heartbeat: Mapped[bool] = mapped_column(Boolean, default=False, server_default="0", nullable=False)
     band: Mapped[str | None] = mapped_column(String(16), nullable=True)
     offset: Mapped[int | None] = mapped_column(Integer, nullable=True)
     mode: Mapped[str | None] = mapped_column(String(32), nullable=True)

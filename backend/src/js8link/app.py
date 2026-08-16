@@ -1010,6 +1010,7 @@ async def _handle_activity(
                                 status="sent",
                                 delivery_mode="best_effort",
                                 tx_frame_type="TX.FRAME",
+                                is_heartbeat=True,
                                 band=band_from_frequency(entry_params.get("DIAL")),
                                 offset=int(_raw_off) if _raw_off is not None else None,
                                 mode=mode_from_speed(entry_params.get("SPEED")),
@@ -1050,6 +1051,7 @@ async def _handle_activity(
                                 status="sent",
                                 delivery_mode="best_effort",
                                 tx_frame_type="TX.FRAME",
+                                is_heartbeat=True,
                                 band=band_from_frequency(entry_params.get("DIAL")),
                                 offset=int(_raw_off) if _raw_off is not None else None,
                                 mode=mode_from_speed(entry_params.get("SPEED")),
@@ -1101,6 +1103,7 @@ async def _handle_activity(
                                 status="sent",
                                 delivery_mode="best_effort",
                                 tx_frame_type="TX.FRAME",
+                                is_heartbeat=True,
                                 band=band_from_frequency(entry_params.get("DIAL")),
                                 offset=int(entry_params["OFFSET"])
                                 if entry_params.get("OFFSET") is not None
@@ -2093,6 +2096,7 @@ async def _handle_directed_heartbeat(
                         status="sent",
                         delivery_mode="best_effort",
                         tx_frame_type="TX.FRAME",
+                        is_heartbeat=True,
                         band=band_from_frequency(params.get("DIAL")),
                         offset=int(params["OFFSET"]) if params.get("OFFSET") is not None else None,
                         mode=mode_from_speed(params.get("SPEED")),
@@ -2235,6 +2239,8 @@ async def _handle_tx_frame(
             tx_state.pop("pending_heartbeat_beacon", None)
         if not frame_text:
             frame_text = "(TX frame)"
+    air_meaning = interpret_air_message(frame_text, params)
+    frame_is_heartbeat = air_meaning.kind in {"heartbeat_beacon", "heartbeat_report"}
     if frame_text:
         async with SessionLocal() as session:
             duplicate = await session.scalar(
@@ -2252,6 +2258,7 @@ async def _handle_tx_frame(
                         status="sent",
                         delivery_mode="best_effort",
                         tx_frame_type="TX.FRAME",
+                        is_heartbeat=frame_is_heartbeat,
                         band=band_from_frequency(dial),
                         offset=int(offset) if offset is not None else None,
                         mode=mode_val,
@@ -5505,7 +5512,10 @@ async def api_chats(session: AsyncSession = Depends(get_session)) -> dict[str, A
     transmitted = (
         await session.scalars(
             select(TransmittedMessage)
-            .where(TransmittedMessage.callsign.is_not(None))
+            .where(
+                TransmittedMessage.callsign.is_not(None),
+                TransmittedMessage.is_heartbeat.is_(False),
+            )
             .order_by(desc(TransmittedMessage.transmitted_at))
             .limit(1000)
         )
@@ -5595,7 +5605,10 @@ async def api_chat_messages(
                 ReceivedMessage.to_callsign.is_(None),
             ),
         )
-    transmitted_query = select(TransmittedMessage).where(TransmittedMessage.callsign == normalized)
+    transmitted_query = select(TransmittedMessage).where(
+        TransmittedMessage.callsign == normalized,
+        TransmittedMessage.is_heartbeat.is_(False),
+    )
     if before is not None:
         cutoff = utc_naive(before)
         received_query = received_query.where(ReceivedMessage.received_at < cutoff)
