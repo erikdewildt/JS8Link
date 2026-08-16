@@ -13,8 +13,6 @@ jobs:
   quality:
     name: Tests and checks
     runs-on: ubuntu-latest
-    env:
-      JS8LINK_DATA_DIR: ${{ runner.temp }}/js8link-test-data
     steps:
       - name: Check out source
         uses: actions/checkout@v6
@@ -50,6 +48,7 @@ jobs:
 
       - name: Run backend tests
         run: |
+          export JS8LINK_DATA_DIR="$RUNNER_TEMP/js8link-test-data"
           uv run alembic upgrade head
           uv run pytest --cov=js8link --cov-report=term-missing
         working-directory: backend
