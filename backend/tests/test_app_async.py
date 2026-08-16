@@ -839,6 +839,25 @@ class TestChatEndpoints:
         assert [message["text"] for message in messages] == ["Hello"]
 
     @pytest.mark.asyncio
+    async def test_locally_transmitted_heartbeat_responses_are_excluded_from_chats(
+        self, async_client, async_session: AsyncSession
+    ) -> None:
+        async_session.add(
+            TransmittedMessage(
+                callsign="PE1PUX",
+                text="PE1PUX M0XRS HEARTBEAT SNR +07",
+                status="sent",
+                delivery_mode="best_effort",
+                tx_frame_type="TX.FRAME",
+                is_heartbeat=True,
+            )
+        )
+        await async_session.commit()
+
+        assert (await async_client.get("/api/chats")).json()["chats"] == []
+        assert (await async_client.get("/api/chats/PE1PUX/messages")).json()["messages"] == []
+
+    @pytest.mark.asyncio
     async def test_chat_can_be_archived_and_restored(self, async_client, async_session: AsyncSession) -> None:
         async_session.add(
             ReceivedMessage(
